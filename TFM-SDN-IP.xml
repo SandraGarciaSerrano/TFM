@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~
+|TFM Scenario|
+~~~~~~~~~~~~~~~~~~~~~~
+
+Name:        TFM-SDN-IP
+
+Description: Virtual scenario of SDN-IP service (Ryu controller, OpenFLow 1.3)
+
+Author:      Luis Bellido Triana, based on the wonderful project by Raúl
+Author:      Raúl Álvarez Pinilla
+Author:    Sandra García Serrano
+-->
+
+<vnx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/vnx-2.00.xsd">
+  <global>
+    <version>2.0</version>
+    <scenario_name>TFM-SDN-IP</scenario_name>
+    <automac/>
+    <vm_mgmt type="none" />
+    <!--vm_mgmt type="private" network="10.250.0.0" mask="24" offset="0">
+       <host_mapping />
+    </vm_mgmt-->
+    <vm_defaults>
+        <console id="0" display="no"/>
+        <console id="1" display="yes"/>
+    </vm_defaults>
+  </global>
+
+    <!-- NET DEFINITION -->
+
+    <!-- virbr0 (192.168.122.0/24) -->
+    <net name="virbr0" mode="virtual_bridge" managed="no"/>
+
+    <!--SDN switches -->
+    <net name="sw1" mode="openvswitch" controller="tcp:10.100.0.2:6633" of_version="OpenFlow13" fail_mode="standalone" hwaddr="00:00:00:00:00:01">
+    <!--net name="sw1" mode="openvswitch" controller="tcp:127.0.0.1:6633" of_version="OpenFlow13" fail_mode="standalone" hwaddr="00:00:00:00:00:01"-->
+    </net>
+
+  <!-- RYU Controller -->
+  <vm name="Ryu" type="lxc" arch="x86_64">
+  <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+  <if id="1" net="sw1">
+    <ipv4>10.100.0.2/24</ipv4>
+  </if>
+
+  <if id="9" net="virbr0">
+    <ipv4>dhcp</ipv4>
+  </if>
+
+  <!-- Copy configuration files -->
+  <filetree seq="on_boot" root="/root/">conf/Ryu/simple_switch_13.py</filetree>
+  <filetree seq="on_boot" root="/root/">conf/Ryu/simple_switch_igmp_13.py</filetree>
+  <filetree seq="on_boot" root="/root/">conf/Ryu/simple_switch_igmp.py</filetree>
+  <filetree seq="on_boot" root="/root/">conf/Ryu/TFM_app.py</filetree>
+  </vm>
+
+  <!-- Client 101 -->
+  <vm name="client-101" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.3/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+  </vm>
+
+  <!-- Client 102 -->
+  <vm name="client-102" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.4/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+  </vm>
+
+  <!-- Client 103 -->
+  <vm name="client-103" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.5/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+  </vm>
+
+  <!-- Server -->
+  <vm name="pub-100-1" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.6/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
+  </vm>
+
+    <host>
+        <hostif net="sw1">
+            <ipv4>10.100.0.7/24</ipv4>
+        </hostif>
+        <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
+        <route type="ipv6" gw="2001:db8:100::1">2001:db8::/32</route>
+    </host>
+
+</vnx>
