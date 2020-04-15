@@ -154,7 +154,7 @@ Author:      Raúl Álvarez Pinilla
     
     <!-- Configuration -->
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install ssmping
     </exec>
 
@@ -178,7 +178,7 @@ Author:      Raúl Álvarez Pinilla
     <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
     <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install ssmping
     </exec>
 
@@ -202,7 +202,7 @@ Author:      Raúl Álvarez Pinilla
     <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
     <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install ssmping
     </exec>
 
@@ -227,7 +227,7 @@ Author:      Raúl Álvarez Pinilla
     <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
     <!-- Configure gateway -->
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install ssmping
     </exec>
 
@@ -251,7 +251,7 @@ Author:      Raúl Álvarez Pinilla
     </if>
     <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install smcroute
     </exec>
 
@@ -273,7 +273,7 @@ Author:      Raúl Álvarez Pinilla
     </if>
     <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
     <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        <echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version>
         sudo apt-get install smcroute
     </exec>
 
