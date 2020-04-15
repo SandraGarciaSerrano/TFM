@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~
+|ONOS-SDN-IP Scenario|
+~~~~~~~~~~~~~~~~~~~~~~
+
+Name:        ONOS-SDN-IP
+
+Description: Virtual scenario of SDN-IP service (ONOS/CORD Project)
+
+Author:      Luis Bellido Triana, based on the wonderful project by Raúl
+Author:      Raúl Álvarez Pinilla
+-->
+
+<vnx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/vnx-2.00.xsd">
+  <global>
+    <version>2.0</version>
+    <scenario_name>ONOS-SDN-IP</scenario_name>
+    <automac/>
+    <vm_mgmt type="none" />
+    <!--vm_mgmt type="private" network="10.250.0.0" mask="24" offset="0">
+       <host_mapping />
+    </vm_mgmt-->
+    <vm_defaults>
+        <console id="0" display="no"/>
+        <console id="1" display="yes"/>
+    </vm_defaults>
+  </global>
+
+    <!-- NET DEFINITION -->
+
+    <!-- virbr0 (192.168.122.0/24) -->
+    <net name="virbr0" mode="virtual_bridge" managed="no"/>
+
+    <!-- Net101 (10.101.0.0/24) (2001:db8:101::/64) -->
+    <!--net name="net101" mode="virtual_bridge"/-->
+    <!-- Net102 (10.102.0.0/24) (2001:db8:102::/64) -->
+    <!--net name="net102" mode="virtual_bridge"/-->
+    <!-- Net103 (10.103.0.0/24) (2001:db8:103::/64) -->
+    <!--net name="net103" mode="virtual_bridge"/-->
+    <!-- NetMgt (10.100.0.0/24) (2001:db8:100::/64) -->
+    <!--net name="netmgt" mode="virtual_bridge"/-->
+
+
+    <!--SDN switches -->
+    <!--net name="s0" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:01:00">
+        <connection name='s0i1' net='i1'/>
+    </net-->
+
+    <net name="sw1" mode="openvswitch" controller="tcp:10.100.0.2:6633" of_version="OpenFlow13" fail_mode="standalone" hwaddr="00:00:00:00:00:01">
+    <!--net name="sw1" mode="openvswitch" controller="tcp:127.0.0.1:6633" of_version="OpenFlow13" fail_mode="standalone" hwaddr="00:00:00:00:00:01"-->
+        <!--connection name='sw1s1' net='net101'/-->
+        <!--connection name='sw1cont' net='cont'/>
+        <connection name='sw1h' net='h'/-->
+    </net>
+    <!--net name="s2" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:01:02">
+        <connection name='s2i3' net='i3'/>
+    </net>
+    <net name="s3" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:01:03">
+        <connection name='s3i4' net='i4'/>
+    </net>
+    <net name="i1" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:02:01">
+        <connection name='i1s1' net='s1'/>
+        <connection name='i1i2' net='i2'/>
+    </net>
+    <net name="i2" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:02:02">
+        <connection name='i2s2' net='s2'/>
+    </net>
+    <net name="i3" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:02:03">
+        <connection name='i3s3' net='s3'/>
+        <connection name='i3i4' net='i4'/>
+    </net>
+    <net name="i4" mode="openvswitch" controller="tcp:10.100.11.1:6633" of_version="OpenFlow13" fail_mode="secure" hwaddr="00:00:00:00:02:04">
+        <connection name='i4s0' net='s0'/>
+    </net-->
+
+  <!-- Quagga Server -->
+  <!--vm name="quagga" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="netmgt">
+      <ipv4>10.100.11.2/24</ipv4>
+    </if>
+    <if id="2" net="s0">
+      <ipv4>10.100.100.2/24</ipv4>
+    </if>
+
+    <forwarding type="ip"/>
+    <route type="ipv4" gw="10.100.11.3">default</route>
+
+
+    <! Copy configuration files >
+    <filetree seq="on_boot" root="/root/conf/">conf/quagga/</filetree>
+
+    <! Start Quagga Service (IPv4) >
+    <exec seq="config-routers" type="verbatim">
+        cp /root/conf/zebra.conf /usr/local/etc/
+        cp /root/conf/bgpd_ipv4.conf /usr/local/etc/bgpd.conf
+        /root/conf/start-quagga.sh
+    </exec>
+    <exec seq="config-extrouter" type="verbatim">
+        ip route add 10.100.1.0/24 via 10.100.100.1
+        ip route add 10.100.2.0/24 via 10.100.100.1
+        ip route add 10.100.3.0/24 via 10.100.100.1
+    </exec>
+  </vm-->
+
+  <!-- Router to Internet R-100 -->
+  <!--vm name="R-100" type="lxc" arch="x86_64">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="netmgt">
+      <ipv4>10.100.11.4/24</ipv4>
+    </if>
+    <if id="2" net="s0">
+      <ipv4>10.100.100.3/24</ipv4>
+    </if>
+  </vm-->
+
+  <!-- RYU -->
+  <vm name="Ryu" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <shareddir root="/shared">conf/Ryu</shareddir>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.2/24</ipv4>
+    </if>
+   
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/Ryu/start-Ryu.sh</filetree>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- CLIENT AS64501 -->
+  <vm name="client-101" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.3/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+    <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
+    
+    <!-- Configuration -->
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install ssmping
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- CLIENT AS64502 -->
+  <vm name="client-102" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.4/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+    <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install ssmping
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- CLIENT AS64503 -->
+  <vm name="client-103" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.5/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+    <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install ssmping
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- CLIENT AS64503 -->
+  <vm name="client-104" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.0.6/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>    
+    <!--route type="ipv6" gw="001:db8:100::1">2001:db8::/32</route-->
+    <!-- Configure gateway -->
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install ssmping
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- PUBLIC HOST AS64500-1 -->
+  <vm name="pub-100-1" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <shareddir root="/shared">conf/server</shareddir>
+    <if id="1" net="sw1">
+      <ipv4>10.100.10.1/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install smcroute
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <vm name="pub-100-2" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="sw1">
+      <ipv4>10.100.10.2/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
+    <exec seq="on_boot" type="verbatim">
+        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
+        sudo apt-get install smcroute
+    </exec>
+
+    <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+      dhclient eth9
+    </exec>
+  </vm>
+
+  <!-- PUBLIC HOST AS64500-3 -->
+  <!--vm name="pub-100-3" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="i3">
+      <ipv4>10.100.3.2/24</ipv4>
+    </if>
+    <route type="ipv4" gw="10.100.3.1">default</route>
+  </vm-->
+
+  <!-- PRIVATE HOST AS64500-2 -->
+  <!--vm name="pri-100-2" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="i2">
+      <ipv4>172.16.2.2/24</ipv4>
+    </if>
+    <route type="ipv4" gw="172.16.2.1">default</route>
+    <exec seq="testping" type="verbatim">
+        ping -c 1 -W 2 -n -q 172.16.2.1
+    </exec>
+    <exec seq="testping" type="verbatim">
+        ping -c 1 -W 2 -n -q 172.16.4.2
+    </exec>
+    <exec seq="testping" type="verbatim">
+        ping -c 1 -W 2 -n -q 10.100.1.2
+    </exec>
+    <exec seq="testping" type="verbatim">
+        ping -c 1 -W 2 -n -q 10.100.3.2
+    </exec>
+  </vm-->
+
+  <!-- PRIVATE HOST AS64500-4 -->
+  <!--vm name="pri-100-4" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="i4">
+      <ipv4>172.16.4.2/24</ipv4>
+    </if>
+    <route type="ipv4" gw="172.16.4.1">default</route>
+  </vm-->
+
+
+  <!-- ROUTER AS64501 -->
+  <!--vm name="R-101" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="net101">
+      <ipv4>10.101.0.1/24</ipv4>
+    </if>
+    <if id="2" net="s1">
+      <ipv4>10.100.101.2/24</ipv4>
+    </if>
+
+    <! Enable IP forwarding in this node >
+    <forwarding type="ip"/>
+
+    <! Copy configuration files >
+    <filetree seq="on_boot" root="/root/conf/">conf/R-101/</filetree>
+
+    <! Start Quagga Service (IPv4) >
+    <exec seq="config-routers" type="verbatim">
+        cp /root/conf/zebra.conf /usr/local/etc/
+        cp /root/conf/bgpd_ipv4.conf /usr/local/etc/bgpd.conf
+        /root/conf/start-quagga.sh
+    </exec>
+
+  </vm-->
+
+  <!-- ROUTER AS64502 -->
+  <!--vm name="R-102" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="net102">
+      <ipv4>10.102.0.1/24</ipv4>
+    </if>
+    <if id="2" net="s2">
+      <ipv4>10.100.102.2/24</ipv4>  
+    </if>
+
+    <! Enable IP forwarding in this node >
+    <forwarding type="ip"/>
+
+    <! Copy configuration files >
+    <filetree seq="on_boot" root="/root/conf/">conf/R-102/</filetree>
+
+    <! Start Quagga Service (IPv4) >
+    <exec seq="config-routers" type="verbatim">
+        cp /root/conf/zebra.conf /usr/local/etc/
+        cp /root/conf/bgpd_ipv4.conf /usr/local/etc/bgpd.conf
+        /root/conf/start-quagga.sh
+    </exec>
+
+  </vm-->
+
+  <!-- ROUTER AS64503 -->
+  <!--m name="R-103" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-onos</filesystem>
+    <if id="1" net="net103">
+      <ipv4>10.103.0.1/24</ipv4>
+    </if>
+    <if id="2" net="s3">
+      <ipv4>10.100.103.2/24</ipv4>  
+    </if>
+
+    <! Enable IP forwarding in this node >
+    <forwarding type="ip"/>
+
+    <! Copy configuration files >
+    <filetree seq="on_boot" root="/root/conf/">conf/R-103/</filetree>
+
+
+    <! Start Quagga Service (IPv4) >
+    <exec seq="config-routers" type="verbatim">
+        cp /root/conf/zebra.conf /usr/local/etc/
+        cp /root/conf/bgpd_ipv4.conf /usr/local/etc/bgpd.conf
+        /root/conf/start-quagga.sh
+    </exec>
+
+  </vm-->
+
+    <host>
+        <hostif net="sw1">
+            <ipv4>10.100.0.7/24</ipv4>
+        </hostif>
+        <!--route type="ipv4" gw="10.100.11.2">10.100.1.0/24</route>
+        <route type="ipv4" gw="10.100.11.2">10.100.2.0/24</route>
+        <route type="ipv4" gw="10.100.11.2">10.100.3.0/24</route-->
+        <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
+        <route type="ipv6" gw="2001:db8:100::1">2001:db8::/32</route>
+    </host>
+
+</vnx>
