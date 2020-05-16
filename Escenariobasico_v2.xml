@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+~~~~~~~~~~~~~~~~~~~~~~
+|Basic Scenario|
+~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~~
-VNX Sample scenarios
-~~~~~~~~~~~~~~~~~~~~
+Name:        Basic scenario
 
-Name:        tutorial_ubuntu64
-Description: As simple tutorial scenario made of 6 LXC Ubuntu virtual machines (4 hosts: h1, h2, h3 and h4; 
-             and 2 routers: r1 and r2) connected through three virtual networks. The host participates 
-             in the scenario having a network interface in Net3.     
+Description: Basic scenario to test the multicast using mcproxy
 
-This file is part of the Virtual Networks over LinuX (VNX) Project distribution. 
-(www: http://www.dit.upm.es/vnx - e-mail: vnx@dit.upm.es) 
+Author:      Sandra Garcia
+
+This file is  a modiffication of the Virtual Networks over LinuX (VNX) Project 
+distribution. (www: http://www.dit.upm.es/vnx - e-mail: vnx@dit.upm.es) 
 
 Departamento de Ingenieria de Sistemas Telematicos (DIT)
 Universidad Politecnica de Madrid
 SPAIN
-
 -->
 
 <vnx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
