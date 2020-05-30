@@ -133,11 +133,11 @@ Author:      Sandra Garcia
       <ipv4>dhcp</ipv4>
     </if>
     <route type="ipv4" gw="10.100.0.1">10.100.0.0/16</route>
-    <exec seq="on_boot" type="verbatim">
-        <!--echo "2" > /proc/sys/net/ipv4/conf/eth1/force_igmp_version-->
-        sudo apt-get install smcroute
-    </exec>
     <filetree seq="on_boot" root="/tmp/">conf/hosts</filetree>
+    <exec seq="on_boot" type="verbatim">
+      cat /tmp/hosts >> /etc/hosts
+      rm /tmp/hosts
+    </exec>
   </vm>
 
   <vm name="provider2" type="lxc" arch="x86_64">
