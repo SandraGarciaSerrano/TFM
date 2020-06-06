@@ -79,7 +79,7 @@ class SwitchIGMPv2Client(app_manager.RyuApp):
                                     match=match, instructions=inst)
         datapath.send_msg(mod)
 
-    def do_report(self, igmp_in, in_port, msg):
+    def do_report(self, in_port, msg):
         datapath = msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -105,7 +105,7 @@ class SwitchIGMPv2Client(app_manager.RyuApp):
             self._to_hosts[dpid]['servers'][server]['ports'][in_port]['out'] = True
             print("Flow added")
 
-    def do_leave(self, igmp_in, in_port, msg):
+    def do_leave(self, in_port, msg):
         datapath = msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -161,11 +161,11 @@ class SwitchIGMPv2Client(app_manager.RyuApp):
             if(igmp_in.msgtype==0x16): #IGMPv2 report (Join) message
                 print("IGMPv2 Report")
                 self.logger.info(log + "[REPORT]")
-                self.do_report(igmp_in, in_port, msg)
+                self.do_report(in_port, msg)
             elif(igmp_in.msgtype==0x17): #IGMPv2 leave message 
                 print("IGMPv2 Leave Group")
                 self.logger.info(log + "[LEAVE]")
-                self.do_leave(igmp_in, in_port, msg)
+                self.do_leave(in_port, msg)
         elif(not igmp_in and dst[:8] == '01:00:5e'): #Prints when no client is listening in the multicast group
             print("No clients listening")
         else: #Normal switch - Example simple_switch_13.py
