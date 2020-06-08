@@ -172,15 +172,15 @@ class SwitchIGMPv3Priorities(app_manager.RyuApp):
     def get_provider(self, ip_client, ip_group, ip_source):
         self.clients_possible = {}
         self.providers = []
-        db = dataset.connect('sqlite:///test.db')
-        table_users = db['usersv2']
+        db = dataset.connect('sqlite:///TFM.db')
+        table_clients = db['clients']
 
         #Checks in the db the rows compatible with the condition and takes
         #the one with the highest priority
-        result = db['usersv2'].all()
+        result = db['clients'].all()
         for res in result:
             if(res['client'] == ip_client or res['client'] == None) and (res['group'] == ip_group or res['group'] == None) and (res['source'] == ip_source or res['source'] == None):
-                client = table_users.find_one(id=res['id'])
+                client = table_clients.find_one(id=res['id'])
                 provider = client['provider']
                 priority = client['priority']
                 self.clients_possible.setdefault(priority, []).append(client)
@@ -188,8 +188,8 @@ class SwitchIGMPv3Priorities(app_manager.RyuApp):
         # With the row chosen, takes the provider value, and does join/leave
         #to that provider (server)
         if self.clients_possible != {}:
-            #print('\n')
             max_key = max(self.clients_possible, key=int)
+
             if len(self.clients_possible[max_key]) > 1:
                 for clients_max in self.clients_possible[max_key]:
                     prov = clients_max['provider']
@@ -264,7 +264,6 @@ class SwitchIGMPv3Priorities(app_manager.RyuApp):
 
         elif(udp and dst[:8] == '01:00:5e'): #Prints when no client is listening in the multicast group
             print("No clients listening")
-
         else: #Normal switch - Example simple_switch_13.py
             #learn a mac address to avoid FLOOD next time.
             self.mac_to_port[dpid][src] = in_port
